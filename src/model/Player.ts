@@ -7,6 +7,7 @@ export class Player {
 
     public readonly viewAngleHalfWidth = Math.PI / 4
     public readonly viewAngleStep = Math.PI / 128
+    public readonly viewAngleSteps = 2 * this.viewAngleHalfWidth / this.viewAngleStep
 
     public position: Point
     public viewAngleMiddle: number = Math.PI / 2
