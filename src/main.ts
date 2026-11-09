@@ -34,7 +34,7 @@ function draw(
     drawMaze(mapContext, maze!)
     drawPlayer(mapContext, player!, intersections, playerSize, pointerSize)
     drawIntersections(mapContext, intersections)
-    drawPov(povContext, povWidth, povHeight, maze!, player!)
+    drawPov(povContext, povWidth, povHeight, player!, intersections)
 }
 
 function addKeyboardListener() {
