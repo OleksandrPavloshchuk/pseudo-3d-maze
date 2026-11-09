@@ -9,11 +9,9 @@ export class Player {
     public readonly viewAngleStep = Math.PI / 512
     public readonly viewAngleSteps = 2 * this.viewAngleHalfWidth / this.viewAngleStep
 
-    public position: Point
     public viewAngleMiddle: number = Math.PI / 2
 
-    constructor(position: Point) {
-        this.position = position
+    constructor(public readonly position: Point) {
     }
 
     turnLeft = () => {

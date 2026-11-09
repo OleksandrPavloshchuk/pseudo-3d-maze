@@ -16,10 +16,10 @@ export class Maze {
         this.mazeHeight = Math.max(...this.field.map(c => c.index.y)) + 1
     }
 
-    public isCollided = (pos: Point): boolean => {
+    isCollided = (pos: Point): boolean => {
 
         for (const cell of this.field) {
-            if (cell.type == "wall" && cell.isCollided(pos, this.gap)) {
+            if (cell.type != "empty" && cell.isCollided(pos, this.gap)) {
                 return true
             }
         }

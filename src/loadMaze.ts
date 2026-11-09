@@ -1,9 +1,13 @@
 import {Maze} from "./model/Maze";
-import {MazeCell} from "./model/MazeCell";
+import {MazeCell, MazeCellType} from "./model/MazeCell";
 
-const getType = (src: string) => {
+const getType = (src: string): MazeCellType => {
     if (src === "#") {
         return "wall"
+    } else if (src==="E") {
+        return "exitDoor"
+    } else if (src==="P") {
+        return "picture"
     } else {
         return "empty"
     }

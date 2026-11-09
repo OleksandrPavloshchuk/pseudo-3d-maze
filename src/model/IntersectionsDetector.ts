@@ -30,11 +30,11 @@ export class IntersectionsDetector {
             let min: Intersection|undefined = undefined
 
             for (let cell of this.maze.field) {
-                if (cell.type == "wall") {
+                if (cell.type != "empty") {
                     const intersections = cell.getEdgesIntersection(this.player.position, dx, dy)
                     intersections.forEach(point => {
                         const distance = this.distance2(point)
-                        const i = {a, cell, point, distance}
+                        const i = {a, cell, point, distance: Math.sqrt(distance)}
                         if (!min || min.distance > i.distance) {
                             min = i
                         }

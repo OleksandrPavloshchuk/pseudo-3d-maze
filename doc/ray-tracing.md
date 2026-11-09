@@ -74,3 +74,197 @@
 Коли один промінь запрацює правильно, решта буде вже питанням циклу.
 
 І це, мабуть, найприємніша частина всієї затії: ти фактично власноруч реалізуєш математичну основу рушіїв старих 3D-ігор. 🙂
+
+--------
+
+Ось тепер починається найцікавіше! Ти поступово переходиш від геометричного експерименту до справжнього програмного рендерера. 🙂
+
+Те викривлення при наближенні, про яке ти кажеш, цілком очікуване. Тут є два різні ефекти:
+
+- Fish-eye distortion — коли використовуєш відстань уздовж променя замість перпендикулярної відстані до площини камери.
+- Геометрична дискретизація — коли кожен промінь відповідає цілій вертикальній смузі екрана.
+
+Перший ефект виправляється корекцією відстані:
+
+\\[ d\_{\perp}=d\cos(a) \\]
+
+де \\(a\\) — відхилення променя від центрального напрямку погляду.
+
+### Щодо текстур стін
+
+Твоя ідея з безпосередньою підстановкою пікселів дуже цікава. Замість малювання ліній ти зможеш працювати безпосередньо з `ImageData`:
+
+```
+const imageData = context.createImageData(width, height)
+const pixels = imageData.data
+
+// pixels[(y * width + x) * 4] = red
+// pixels[(y * width + x) * 4 + 1] = green
+// pixels[(y * width + x) * 4 + 2] = blue
+// pixels[(y * width + x) * 4 + 3] = alpha
+
+context.putImageData(imageData, 0, 0)
+```
+
+Тоді кожен промінь фактично стає вертикальною колонкою пікселів, для якої ти визначаєш:
+
+- висоту стіни;
+- текстурну координату по горизонталі;
+- текстурну координату по вертикалі;
+- колір відповідного пікселя.
+
+### А ось підлога та стеля — окрема цікава задача
+
+[Wolfenstein 3D | WSGF](https://images.openai.com/static-rsc-4/qNNjS6JuM5HSSwC83uXliEW8RyHeWd1H7UEyvbQmIx9ZwgrWq0qNeS1byPBpUTN75OHG7KU1rtzyouXpBVX2RX4VTCEle9iWUW6uYMvddu9IeBq-EFWkeLxq4EKoxdxoGxGJClB8duMjbZWM0p9ZfPMQmZqYYQK-qU7fnD8AUVM?purpose=inline)
+
+[You Can Now Play Doom In Notepad, Obviously | TechRaptor](https://images.openai.com/static-rsc-4/GWPlVgDgpKmdVQz0N2NQDIAXVYw_HDRA3VXlHwTdrbma28wh1KLRwpdovnA0CME2QlCibM3kXMMBe27b28d05DdEVDw5wcMOxBUNdeM_Iiowk43M7eVDMKTIQkTlqFgJQ0TR41_4EJd9vkw6o2HFjOTxASnx4kHsNW9rR0H3r4k?purpose=inline)
+
+[DOOM (1994) is Still One of The Best Shooters of All Time — Ego Clown](https://images.openai.com/static-rsc-4/uMDWYSisnXsvTJtq_Nv0BHdBHWkBW8azHkzsQGXlK_lccGW6gUdoOwnv8BVWMNjOsG9TaQZTl-dlY19DG5UCIYsWe2t-9Yl96YtkJOCFs8plZp0-clkZPmzoaS8J1wm8wYvDaUYHm5OGyxpuuHuElqe9H_Mn4S6qNxA-QhE4EtA?purpose=inline)
+
+8
+
+Тут уже можна перейти до так званого floor casting: для кожного пікселя підлоги визначати, яку точку ігрової площини він представляє, а потім брати відповідний піксель текстури.
+
+І це дуже гарно доповнює твій нинішній алгоритм.
+
+Мені особливо цікаво, що ти фактично самостійно проходиш шлях від класичного ray casting до текстурованого рендерингу. Причому вже маєш найважливіше — працюючу геометричну основу.
+
+Я б поки не поспішав із підлогою. Спочатку зроби одну текстуровану стіну. Коли побачиш, як текстура змінюється при русі гравця, задоволення буде неабияке! 😁
+
+-----
+
+Ти дуже точно підмітив цікаву еволюцію технологій. І тут є суттєва різниця між трьома поколіннями рушіїв: Wolfenstein 3D → Doom → Duke Nukem 3D.
+
+Усі три створювали ілюзію тривимірного світу, але математична модель цього світу була різною.
+
+## 1. Wolfenstein 3D — буквально лабіринт із клітинок
+
+[TED5 (the map editor used by ID) -    DieHard Wolfers](https://images.openai.com/static-rsc-4/iY53_8Q4eQgI7-Hq-Cqyw5si2jKwa1zK8YJ-CU-UUZ4uZGt0ZoBvE0DCFHUp21JVmqtSy-U2RJKO6KhcbzToPafg1nkd4olrA1t0lUY1pM18qK5GdXuw9B_Jmtds2dryj9rGZQlaDtVJjFDmuv5289ox_i0fI3wHgh6eHHQKIhU?purpose=inline)
+
+Wolfenstein 3D (1992)
+
+Тут усе дуже близьке до того, що ти зараз реалізуєш. Карта — регулярна двовимірна сітка.
+
+- Максимальний розмір карти — 64 × 64 клітинки.
+- Усього 4096 позицій.
+- Зовнішній ряд зазвичай займали стіни, тому доступна область була 62 × 62.
+- Кожна клітинка позначала стіну, двері або прохід.
+- Текстури стін мали розмір 64 × 64 пікселі.
+
+Цікаво, що в оригінальному форматі карти було дві площини: одна для геометрії, друга для об'єктів, ворогів та предметів.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://vpoupet.github.io\&sz=32)
+
+wolfenstein+2
+
+
+
+Тобто твоя нинішня модель `MazeCell` концептуально дуже близька до базової моделі Wolfenstein.
+
+## 2. Doom — уже зовсім інша геометрія
+
+[Steam Community :: Guide :: Ultimate Doom (Wiki)](https://images.openai.com/static-rsc-4/da8N7yhW4Ufcl9nvWRccVU4o0EMEZjWf_tJ6FJxz7eNsXUwf-sg4n0WzALIObxbzvkXlRRfhcQ7ooetA5_Wqsc6ChOdbrWG9lTSgN7fPfD4sfvJ3B3DY0BBafiLxc1tatxWxNxvRx2LJf_480yiRK5iIoHk6MiwaYxm7yz3MUz4?purpose=inline)
+
+Doom (1993)
+
+Тут уже немає регулярної сітки клітинок. Рівень складається з вершин, ліній та секторів.
+
+І ось тут починається справжня краса інженерної думки.
+
+У Doom:
+
+- Vertex — двовимірна точка.
+- Linedef — відрізок між двома вершинами.
+- Sector — область із власною висотою підлоги та стелі.
+- Sidedef — інформація про текстури та властивості сторони стіни.
+
+Сектори можуть мати різні висоти підлоги й стелі. Завдяки цьому з'явилися сходи, платформи, ліфти, мости, високі приміщення та складні переходи.
+
+Але ти правильно прочитав про обмеження: класичний Doom не підтримує справжні кімнати, розташовані одна над одною в одній і тій самій горизонтальній області.
+
+Це називають 2.5D. Геометрія світу залишається двовимірною, але кожна область має вертикальні параметри.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://doom.fandom.com\&sz=32)
+
+Fandom+1
+
+
+
+## 3. Duke Nukem 3D — ще один крок уперед
+
+[Duke nukem 3d hollywood holocaust - coinsvica](https://images.openai.com/static-rsc-4/5t7MCm4ulgpVjeCndTgk7efn6nq6DlBdH7yjvrZyRfuk36TSnRS4KBEni8ood-bQT2QK-2igmkovMLZMmUlyC4YXRpvgQ_KVDI9TfDcvNFGN9y1McsYg048m7T5h3nj-6qVD8g_PueD37JUWuNUTVAkKx3Ahax71NL65nSPelmA?purpose=inline)
+
+Duke Nukem 3D (1996)
+
+Використовує рушій Build, створений Кеном Сільверманом.
+
+Тут теж не повноцінна тривимірна геометрія в сучасному розумінні. Але Build зробив дуже цікавий трюк.
+
+Він дозволяв мати сектори, які перекриваються в координатах XY. Завдяки порталам можна було переходити з одного сектора в інший, навіть якщо вони розташовані один над одним.
+
+Саме так реалізовували:
+
+- багатоповерхові будівлі;
+- ліфти;
+- приміщення над приміщеннями;
+- тунелі, що проходять під іншими приміщеннями.
+
+Тобто Duke Nukem 3D мав можливості, яких не було в оригінальному Doom. Але це все ще спеціалізований 2.5D рушій, а не довільна тривимірна геометрія.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://tanepiper.github.io\&sz=32)
+
+GameFrame+1
+
+
+
+## Порівняння трьох поколінь
+
+| Характеристика         | Wolfenstein 3D | Doom                | Duke Nukem 3D       |
+| ---------------------- | -------------- | ------------------- | ------------------- |
+| Геометрія              | Сітка          | Полігони/сектори    | Полігони/сектори    |
+| Висота підлоги         | Одна           | Для кожного сектора | Для кожного сектора |
+| Висота стелі           | Одна           | Для кожного сектора | Для кожного сектора |
+| Нахилені поверхні      | Ні             | Ні                  | Так                 |
+| Кімнати одна над одною | Ні             | Ні                  | Так, через портали  |
+| Текстурована підлога   | Ні             | Так                 | Так                 |
+
+## 4. Ще одна цікава деталь: як вони малювали світ
+
+[Wolfenstein 3D: Does it Hold Up? – The Daily SPUF](https://images.openai.com/static-rsc-4/GqUVx4tbEGT6T3CNJTqi9lfoBHHUaTyqySAlCadnVqhkclslepH4S_SauP2j3Ua45k3LmB_3RdiYJguY8A-DCdo3LCX9N2FZ6WcmkujOb3LmkXtxSAgwliURqdnAhKKyv0j8VBc7vvQrOL234IltbJm9SkBg4FCTUrRDg71I1Us?purpose=inline)
+
+Wolfenstein 3D
+
+Промінь проходить через клітинки до першої стіни.
+
+[A quick look back at the creation of Doom on its 30th anniversary \[Update\] - Neowin](https://images.openai.com/static-rsc-4/McmT_Uq_m2UcXo5Y-yhM3_nctNvF0sGRxqRY_xAEFcvkOxyn7hmBEcfvN8_bGLWTiJVQRpEn3wC9rSaES6eHyRP53Jlgk20vnTyyENrfxPBWH35tK1ebjQS5pDrln5NSDH1gN813MxuKfoKQGEu6VzGaI3nInUNMozEivliixA8?purpose=inline)
+
+Doom
+
+BSP-структура, обробка видимих сегментів стін і площин.
+
+І ось тут є принципова відмінність, яка тобі буде цікава.
+
+Wolfenstein використовує ray casting: промені йдуть від гравця та шукають найближчу стіну.
+
+Doom використовує іншу архітектуру — BSP (Binary Space Partitioning). Простір попередньо розбивається на частини, а рушій обходить їх у порядку, що дозволяє ефективно визначати видимість і малювати геометрію.
+
+Тобто Doom не просто оптимізував алгоритм Wolfenstein — він фактично змінив сам принцип побудови сцени.
+
+## 5. А що це означає для твого рушія?
+
+Мені здається, ти зараз дуже вдало вибрав початкову модель.
+
+Твоя `MazeCell` — це фактично модель першого покоління ray casting.
+
+Але якщо колись захочеш перейти до Doom-подібної геометрії, тобі не доведеться викидати все, що ти вивчив. Ти вже розумітимеш:
+
+- проєкцію тривимірного світу;
+- перетини променів із геометрією;
+- перспективну корекцію;
+- текстурні координати;
+- роботу з пікселями;
+- видимість та перекриття.
+
+І ще одна думка: Doom — це чудовий приклад того, як обмеження математичної моделі не заважають створити дуже переконливу ілюзію складного світу.
+
+Саме це, мабуть, найбільше вражає в ігровій інженерії 90-х. Не стільки потужність комп'ютерів, скільки винахідливість людей, які намагалися витиснути з них максимум. 🙂

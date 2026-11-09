@@ -5,26 +5,24 @@ import {drawPlayer} from "./ui/drawPlayer";
 import {drawMaze} from "./ui/drawMaze";
 import {drawIntersections} from "./ui/drawIntersections";
 import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector";
-import {drawPov} from "./ui/drawPov";
+import {drawFpv} from "./ui/drawFpv";
 
 const cellSize = 50
 const playerWallGap = 6
 const playerSize = 4
 const pointerSize = 8
 
-const povWidth = 480
-const povHeight = 320
+const povWidth = 640
+const povHeight = 480
 
 const mapCanvas = document.getElementById("maze-map-canvas") as HTMLCanvasElement
 let mapContext: CanvasRenderingContext2D | null = null
 
-const povCanvas = document.getElementById("maze-pov-canvas") as HTMLCanvasElement
-let povContext: CanvasRenderingContext2D | null = null
+const fpvCanvas = document.getElementById("maze-pov-canvas") as HTMLCanvasElement
+let fpvContext: CanvasRenderingContext2D | null = null
 
 let maze: Maze | undefined = undefined
 let player: Player | undefined = undefined
-
-// TODO use Intersection objects instead of Point here
 let intersections: Intersection[] = []
 
 function draw(
@@ -34,7 +32,7 @@ function draw(
     drawMaze(mapContext, maze!)
     drawPlayer(mapContext, player!, intersections, playerSize, pointerSize)
     drawIntersections(mapContext, intersections)
-    drawPov(povContext, povWidth, povHeight, player!, intersections)
+    drawFpv(povContext, povWidth, povHeight, player!, intersections)
 }
 
 function addKeyboardListener() {
@@ -63,13 +61,9 @@ function addKeyboardListener() {
     });
 }
 
-const calculateIntersections = () => {
-    intersections = new IntersectionsDetector(player!, maze!).calculate()
-}
-
 const redraw = () => {
-    calculateIntersections()
-    draw(mapContext!, povContext!)
+    intersections = new IntersectionsDetector(player!, maze!).calculate()
+    draw(mapContext!, fpvContext!)
 }
 
 async function initialize(): Promise<void> {
@@ -78,15 +72,14 @@ async function initialize(): Promise<void> {
         throw new Error("Canvas 2D context for map is unavailable");
     }
 
-    povContext = povCanvas.getContext("2d");
-    if (!povContext) {
+    fpvContext = fpvCanvas.getContext("2d");
+    if (!fpvContext) {
         throw new Error("Canvas 2D context for POV is unavailable");
     }
+    fpvCanvas.width = povWidth
+    fpvCanvas.height = povHeight
 
-    povCanvas.width = povWidth
-    povCanvas.height = povHeight
-
-    maze = await loadMaze("/maze_samples/1.txt", cellSize, playerWallGap)
+    maze = await loadMaze("/maze_samples/2.txt", cellSize, playerWallGap)
     mapCanvas.width = cellSize * maze!.mazeWidth
     mapCanvas.height = cellSize * maze!.mazeHeight
 

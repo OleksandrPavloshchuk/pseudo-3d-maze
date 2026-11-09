@@ -1,6 +1,6 @@
 import {Point} from "./Point";
 
-export type MazeCellType = "empty" | "wall"
+export type MazeCellType = "empty" | "wall" | "picture" | "exitDoor"
 
 export class MazeCell {
     readonly index: Point
