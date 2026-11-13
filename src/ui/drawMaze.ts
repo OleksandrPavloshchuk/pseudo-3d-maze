@@ -1,5 +1,6 @@
-import {Maze} from "../model/Maze";
-import {MazeCell, MazeCellType} from "../model/MazeCell";
+import {Maze} from "../model/Maze"
+import {MazeCell} from "../model/MazeCell"
+import {getColor} from "./utils"
 
 export const drawMaze = (
     context: CanvasRenderingContext2D,
@@ -13,17 +14,4 @@ export const drawMaze = (
 
     })
 
-}
-
-const getColor= (type: MazeCellType)=> {
-    switch (type) {
-        case "wall":
-            return "lightGrey"
-        case "picture":
-            return "pink"
-        case "exitDoor":
-            return "yellow"
-        default:
-            return "powderblue"
-    }
 }

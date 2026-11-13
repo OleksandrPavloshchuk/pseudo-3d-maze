@@ -1,5 +1,5 @@
-import {Maze} from "./Maze";
-import {Point} from "./Point";
+import {Maze} from "./Maze"
+import {Point} from "./Point"
 
 export class Player {
     private readonly turnStep = 0.1

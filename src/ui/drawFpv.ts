@@ -1,6 +1,6 @@
-import {Player} from "../model/Player";
-import {Intersection} from "../model/IntersectionsDetector";
-import {MazeCellType} from "../model/MazeCell";
+import {Player} from "../model/Player"
+import {Intersection} from "../model/IntersectionsDetector"
+import {getColor} from "./utils"
 
 const K = 8_000
 
@@ -10,7 +10,7 @@ function drawCeiling(context: CanvasRenderingContext2D, width: number, height: n
 }
 
 function drawFloor(context: CanvasRenderingContext2D, width: number, height: number) {
-    context.fillStyle = "powderblue"
+    context.fillStyle = getColor("empty")
     context.fillRect(0, height / 2, width, height / 2)
 }
 
@@ -43,17 +43,4 @@ export const drawFpv = (
     drawCeiling(context, width, height);
     drawFloor(context, width, height);
     drawWalls(context, width, height, player, intersections);
-}
-
-const getColor= (type: MazeCellType)=> {
-    switch (type) {
-        case "wall":
-            return "#BBFFCC"
-        case "picture":
-            return "pink"
-        case "exitDoor":
-            return "yellow"
-        default:
-            return "powderblue"
-    }
 }

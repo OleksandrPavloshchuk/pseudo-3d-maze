@@ -1,13 +1,13 @@
-import {Maze} from "./model/Maze";
-import {Player} from "./model/Player";
-import {loadMaze} from "./loadMaze";
-import {drawPlayer} from "./ui/drawPlayer";
-import {drawMaze} from "./ui/drawMaze";
-import {drawIntersections} from "./ui/drawIntersections";
-import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector";
-import {drawFpv} from "./ui/drawFpv";
+import {Maze} from "./model/Maze"
+import {Player} from "./model/Player"
+import {loadMaze} from "./loadMaze"
+import {drawPlayer} from "./ui/drawPlayer"
+import {drawMaze} from "./ui/drawMaze"
+import {drawIntersections} from "./ui/drawIntersections"
+import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector"
+import {drawFpv} from "./ui/drawFpv"
 
-const cellSize = 50
+const cellSize = 64
 const playerWallGap = 6
 const playerSize = 4
 const pointerSize = 8
@@ -66,20 +66,21 @@ const redraw = () => {
     draw(mapContext!, fpvContext!)
 }
 
-async function initialize(): Promise<void> {
-    mapContext = mapCanvas.getContext("2d");
-    if (!mapContext) {
-        throw new Error("Canvas 2D context for map is unavailable");
+const getContext = (canvas: HTMLCanvasElement)=> {
+    const result = canvas.getContext("2d");
+    if (!result) {
+        throw new Error("Context is unavailable");
     }
+    return result
+}
 
-    fpvContext = fpvCanvas.getContext("2d");
-    if (!fpvContext) {
-        throw new Error("Canvas 2D context for POV is unavailable");
-    }
+async function initialize(): Promise<void> {
+    fpvContext = getContext(fpvCanvas)
     fpvCanvas.width = povWidth
     fpvCanvas.height = povHeight
 
     maze = await loadMaze("/maze_samples/2.txt", cellSize, playerWallGap)
+    mapContext = getContext(mapCanvas)
     mapCanvas.width = cellSize * maze!.mazeWidth
     mapCanvas.height = cellSize * maze!.mazeHeight
 
@@ -90,4 +91,5 @@ async function initialize(): Promise<void> {
     redraw()
 }
 
+// Entry point
 initialize().catch((e) => console.log(e))

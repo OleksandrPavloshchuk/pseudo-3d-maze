@@ -1,18 +1,15 @@
-import {Point} from "./Point";
+import {Point} from "./Point"
 
 export type MazeCellType = "empty" | "wall" | "picture" | "exitDoor"
 
 export class MazeCell {
-    readonly index: Point
-    readonly center: Point
-    readonly type: MazeCellType
-    readonly cellSize: number
 
-    constructor(index: Point, center: Point, cellSize: number, type: MazeCellType) {
-        this.center = center
-        this.type = type
-        this.index = index
-        this.cellSize = cellSize
+    constructor(
+        public readonly index: Point,
+        public readonly center: Point,
+        public readonly cellSize: number,
+        public readonly type: MazeCellType
+    ) {
     }
 
     isCollided = (pos: Point, gap: number) => {

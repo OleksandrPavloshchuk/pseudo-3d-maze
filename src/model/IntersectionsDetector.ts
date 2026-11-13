@@ -1,7 +1,7 @@
-import {Player} from "./Player";
-import {Maze} from "./Maze";
-import {Point} from "./Point";
-import {MazeCell} from "./MazeCell";
+import {Player} from "./Player"
+import {Maze} from "./Maze"
+import {Point} from "./Point"
+import {MazeCell} from "./MazeCell"
 
 export interface Intersection {
     a: number
@@ -11,12 +11,11 @@ export interface Intersection {
 }
 
 export class IntersectionsDetector {
-    private readonly player: Player
-    private readonly maze: Maze
 
-    constructor(player: Player, maze: Maze) {
-        this.maze = maze
-        this.player = player
+    constructor(
+        private readonly player: Player,
+        private readonly maze: Maze
+    ) {
     }
 
     calculate = () => {
@@ -33,8 +32,7 @@ export class IntersectionsDetector {
                 if (cell.type != "empty") {
                     const intersections = cell.getEdgesIntersection(this.player.position, dx, dy)
                     intersections.forEach(point => {
-                        const distance = this.distance2(point)
-                        const i = {a, cell, point, distance: Math.sqrt(distance)}
+                        const i = {a, cell, point, distance: this.distance(point)}
                         if (!min || min.distance > i.distance) {
                             min = i
                         }
@@ -51,7 +49,7 @@ export class IntersectionsDetector {
 
     private pow2 = (n: number) => n * n
 
-    private distance2 = (p: Point) =>
-        this.pow2(p.x - this.player.position.x) + this.pow2(p.y - this.player.position.y)
+    private distance = (p: Point) =>
+        Math.sqrt(this.pow2(p.x - this.player.position.x) + this.pow2(p.y - this.player.position.y))
 
 }

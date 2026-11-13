@@ -1,4 +1,4 @@
-import {Intersection} from "../model/IntersectionsDetector";
+import {Intersection} from "../model/IntersectionsDetector"
 
 export const drawIntersections = (
     context: CanvasRenderingContext2D,
@@ -7,7 +7,7 @@ export const drawIntersections = (
     const size = 2
 
     for(let i of intersections) {
-        context.fillStyle = "red"
+        context.fillStyle = "grey"
         context.fillRect( i.point.x - size/2, i.point.y - size/2, size, size)
     }
 

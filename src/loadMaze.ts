@@ -1,15 +1,16 @@
-import {Maze} from "./model/Maze";
-import {MazeCell, MazeCellType} from "./model/MazeCell";
+import {Maze} from "./model/Maze"
+import {MazeCell, MazeCellType} from "./model/MazeCell"
 
 const getType = (src: string): MazeCellType => {
-    if (src === "#") {
-        return "wall"
-    } else if (src==="E") {
-        return "exitDoor"
-    } else if (src==="P") {
-        return "picture"
-    } else {
-        return "empty"
+    switch (src) {
+        case "#":
+            return "wall"
+        case "E":
+            return "exitDoor"
+        case "P":
+            return "picture"
+        default:
+            return "empty"
     }
 }
 
@@ -22,8 +23,7 @@ export const loadMaze = async (mazeResource: string, cellSize: number, playerWal
     const rows = text.split("\n")
 
     for (let y = 0; y < rows.length; y++) {
-        const len = rows[y].length
-        for (let x = 0; x < len; x++) {
+        for (let x = 0; x < rows[y].length; x++) {
             const cell = new MazeCell(
                 {x, y},
                 {x: (x + 0.5) * cellSize, y: (y + 0.5) * cellSize},

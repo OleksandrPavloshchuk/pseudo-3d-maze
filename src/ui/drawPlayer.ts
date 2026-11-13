@@ -1,5 +1,5 @@
-import {Player} from "../model/Player";
-import {Intersection} from "../model/IntersectionsDetector";
+import {Player} from "../model/Player"
+import {Intersection} from "../model/IntersectionsDetector"
 
 function drawPointer(context: CanvasRenderingContext2D, player: Player, pointerSize: number) {
     const pointerX = player.position.x + pointerSize * Math.cos(player.viewAngleMiddle)
@@ -18,12 +18,10 @@ function drawViewAngle(context: CanvasRenderingContext2D, player: Player, inters
     context.beginPath();
     for (let a = -player.viewAngleHalfWidth; a <= player.viewAngleHalfWidth; a += player.viewAngleStep) {
         context.moveTo(player.position.x, player.position.y);
-
-        const p = intersections.filter( i => i.a===a)![0].point
-
+        const p = intersections.find( i => i.a===a)!.point
         context.lineTo(p.x, p.y)
     }
-    context.strokeStyle = "azure";
+    context.strokeStyle = "#B8F0FF";
     context.lineWidth = 1;
     context.stroke();
 }
@@ -31,7 +29,7 @@ function drawViewAngle(context: CanvasRenderingContext2D, player: Player, inters
 function drawCircle(context: CanvasRenderingContext2D, player: Player, playerSize: number) {
     context.beginPath()
     context.arc(player.position.x, player.position.y, playerSize, 0, 2 * Math.PI)
-    context.fillStyle = "pink"
+    context.fillStyle = "red"
     context.fill();
 }
 
