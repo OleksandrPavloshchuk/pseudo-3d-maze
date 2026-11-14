@@ -3,17 +3,16 @@ import {Player} from "./model/Player"
 import {loadMaze} from "./loadMaze"
 import {drawPlayer} from "./ui/drawPlayer"
 import {drawMaze} from "./ui/drawMaze"
-import {drawIntersections} from "./ui/drawIntersections"
 import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector"
 import {drawFpv} from "./ui/drawFpv"
 
 const cellSize = 64
 const playerWallGap = 6
-const playerSize = 4
-const pointerSize = 8
 
-const povWidth = 640
-const povHeight = 480
+const mapScale = 4 // "4" means, that map scale is 1/4
+
+const povWidth = 800
+const povHeight = 640
 
 const mapCanvas = document.getElementById("maze-map-canvas") as HTMLCanvasElement
 let mapContext: CanvasRenderingContext2D | null = null
@@ -29,9 +28,8 @@ function draw(
     mapContext: CanvasRenderingContext2D,
     povContext: CanvasRenderingContext2D
 ): void {
-    drawMaze(mapContext, maze!)
-    drawPlayer(mapContext, player!, intersections, playerSize, pointerSize)
-    drawIntersections(mapContext, intersections)
+    drawMaze(mapContext, maze!, mapScale)
+    drawPlayer(mapContext, player!, intersections, mapScale)
     drawFpv(povContext, povWidth, povHeight, player!, intersections)
 }
 
@@ -81,8 +79,8 @@ async function initialize(): Promise<void> {
 
     maze = await loadMaze("/maze_samples/2.txt", cellSize, playerWallGap)
     mapContext = getContext(mapCanvas)
-    mapCanvas.width = cellSize * maze!.mazeWidth
-    mapCanvas.height = cellSize * maze!.mazeHeight
+    mapCanvas.width = cellSize * maze!.mazeWidth / mapScale
+    mapCanvas.height = cellSize * maze!.mazeHeight / mapScale
 
     player = new Player({x: cellSize * 1.5, y: cellSize * 1.5})
 

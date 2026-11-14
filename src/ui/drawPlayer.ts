@@ -1,46 +1,45 @@
 import {Player} from "../model/Player"
 import {Intersection} from "../model/IntersectionsDetector"
 
-function drawPointer(context: CanvasRenderingContext2D, player: Player, pointerSize: number) {
-    const pointerX = player.position.x + pointerSize * Math.cos(player.viewAngleMiddle)
-    const pointerY = player.position.y + pointerSize * Math.sin(player.viewAngleMiddle)
-
-    context.beginPath();
-    context.moveTo(player.position.x, player.position.y);
-    context.lineTo(pointerX, pointerY);
-    context.strokeStyle = "red";
-    context.lineWidth = 2;
-    context.stroke();
-}
-
-function drawViewAngle(context: CanvasRenderingContext2D, player: Player, intersections: Intersection[]) {
+function drawViewAngle(
+    context: CanvasRenderingContext2D,
+    player: Player,
+    intersections: Intersection[],
+    mapScale: number
+) {
 
     context.beginPath();
     for (let a = -player.viewAngleHalfWidth; a <= player.viewAngleHalfWidth; a += player.viewAngleStep) {
-        context.moveTo(player.position.x, player.position.y);
-        const p = intersections.find( i => i.a===a)!.point
-        context.lineTo(p.x, p.y)
+        drawRay(context, a, player, intersections, mapScale)
     }
-    context.strokeStyle = "#B8F0FF";
+    context.strokeStyle = "#F0F8F0";
     context.lineWidth = 1;
     context.stroke();
 }
 
-function drawCircle(context: CanvasRenderingContext2D, player: Player, playerSize: number) {
-    context.beginPath()
-    context.arc(player.position.x, player.position.y, playerSize, 0, 2 * Math.PI)
+const drawRay = (
+    context: CanvasRenderingContext2D,
+    a: number,
+    player: Player,
+    intersections: Intersection[],
+    mapScale: number
+) => {
+    context.moveTo(player.position.x / mapScale, player.position.y / mapScale);
+    const p = intersections.find(i => i.a === a)!.point
+    context.lineTo(p.x / mapScale, p.y / mapScale)
+}
+
+function drawPoint(context: CanvasRenderingContext2D, player: Player, mapScale: number) {
     context.fillStyle = "red"
-    context.fill();
+    context.fillRect(player.position.x / mapScale - 1, player.position.y / mapScale - 1, 2, 2)
 }
 
 export const drawPlayer = (
     context: CanvasRenderingContext2D,
     player: Player,
     intersections: Intersection[],
-    playerSize: number,
-    pointerSize: number
+    mapScale: number
 ) => {
-    drawViewAngle(context, player, intersections);
-    drawPointer(context, player, pointerSize);
-    drawCircle(context, player, playerSize);
+    drawViewAngle(context, player, intersections, mapScale);
+    drawPoint(context, player, mapScale);
 }
