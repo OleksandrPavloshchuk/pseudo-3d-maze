@@ -16,7 +16,7 @@ export class Player {
         fpvWidth: number)
     {
         this.viewAngleStep = Math.PI / fpvWidth
-        this.viewAngleSteps = 2 * this.viewAngleHalfWidth / this.viewAngleStep
+        this.viewAngleSteps = fpvWidth
     }
 
     turnLeft = () => {

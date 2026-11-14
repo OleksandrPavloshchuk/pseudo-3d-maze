@@ -12,3 +12,58 @@ export const getColor= (type: MazeCellType)=> {
             return "#B0D8FF"
     }
 }
+
+export type Pixel = {
+    red: number, green: number, blue: number
+}
+
+export const setPixel = (
+    pixels: ImageDataArray,
+    width: number,
+    x: number,
+    y: number,
+    pixel: Pixel
+) => {
+    const index = (y * width + x) * 4
+
+    pixels[index] = pixel.red
+    pixels[index + 1] = pixel.green
+    pixels[index + 2] = pixel.blue
+    pixels[index + 3] = 255    // opacity
+}
+
+// TODO temporary. Read it from texture image
+export const getPixel = (type: MazeCellType)=> {
+    switch (type) {
+        case "wall":
+            return {
+                red: 179,
+                green: 179,
+                blue: 179
+            }
+        case "picture":
+            return {
+                red: 179,
+                green: 255,
+                blue: 179
+            }
+        case "exitDoor":
+            return {
+                red: 255,
+                green: 255,
+                blue: 179
+            }
+        default:
+            return {
+                red: 102,
+                green: 204,
+                blue: 204
+            }
+    }
+}
+
+export const CEILING_PIXEL = {
+    red: 204,
+    green: 204,
+    blue: 255
+}

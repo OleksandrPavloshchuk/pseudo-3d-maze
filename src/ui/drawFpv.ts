@@ -1,54 +1,51 @@
-import {Player} from "../model/Player"
 import {Intersection} from "../model/IntersectionsDetector"
-import {getColor} from "./utils"
+import {CEILING_PIXEL, getPixel, setPixel} from "./utils"
 
 const K = 10_000
 
-const drawPixel = (
+export const createFpvImageData = (
     context: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    fillColor: string
-) => {
-    context.fillStyle = fillColor
-    context.fillRect(x - 1, y - 1, 2, 2)
+    imageWidth: number,
+    imageHeight: number,
+    intersections: Intersection[]
+)=> {
+    const imageData = context.createImageData(imageWidth, imageHeight)
+    for (let x = 0; x < imageWidth; x++) {
+        const index = Math.floor(x * intersections.length / imageWidth)
+
+        drawVerticalLine(
+            imageData,
+            x,
+            imageWidth,
+            imageHeight,
+            intersections[index]
+        )
+    }
+    context.putImageData(imageData, 0 ,0)
 }
 
 const drawVerticalLine = (
-    context: CanvasRenderingContext2D,
+    imageData: ImageData,
     x: number,
+    width: number,
     height: number,
     intersection: Intersection
 ) => {
-    // TODO very slow
+    const data = imageData.data
+
     const lineHeight = K / intersection.distance
     for (let y = 0; y < height; y++) {
-        let color
+        let pixel
         if (y < height / 2 - lineHeight) {
             // floor
-            color = "powderblue"
+            pixel = getPixel("empty")
         } else if (y > height / 2 + lineHeight) {
             // ceiling
-            color = "azure"
+            pixel = CEILING_PIXEL
         } else {
             // wall
-            color = getColor(intersection.cell.type)
+            pixel = getPixel(intersection.cell.type)
         }
-        drawPixel(context, x, y, color)
+        setPixel(data, width, x, y, pixel)
     }
-}
-
-export const drawFpv = (
-    context: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    player: Player,
-    intersections: Intersection[]
-) => {
-    let x = 0
-    const stepX = width / player.viewAngleSteps
-    intersections.forEach(intersection => {
-        drawVerticalLine(context, x, height, intersection)
-        x += stepX
-    })
 }
