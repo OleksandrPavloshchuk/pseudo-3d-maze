@@ -1,5 +1,5 @@
 import type {MazeCellType} from "../model/MazeCell.ts";
-import type {Pixel} from "../ui/utils.ts";
+import type {Pixel} from "../ui/Pixel.ts";
 
 export const TEXTURE_SIZE = 64
 

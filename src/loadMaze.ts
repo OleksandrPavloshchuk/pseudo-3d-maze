@@ -25,17 +25,13 @@ export const loadMaze = async (mazeResource: string, playerWallGap: number): Pro
 
     for (let y = 0; y < rows.length; y++) {
         for (let x = 0; x < rows[y].length; x++) {
-            const cell = new MazeCell(
+            field.push(new MazeCell(
                 {x, y},
                 {x: (x + 0.5) * TEXTURE_SIZE, y: (y + 0.5) * TEXTURE_SIZE},
                 TEXTURE_SIZE,
                 getType(rows[y].charAt(x))
-            )
-            field.push(cell)
+            ))
         }
     }
-    let maze = new Maze(field)
-    maze.cellSize = TEXTURE_SIZE
-    maze.gap = playerWallGap
-    return maze
+    return new Maze(field, playerWallGap)
 }

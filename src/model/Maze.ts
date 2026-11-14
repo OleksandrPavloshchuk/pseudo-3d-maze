@@ -5,11 +5,9 @@ export class Maze {
     public readonly mazeWidth: number
     public readonly mazeHeight: number
 
-    public cellSize: number = 0
-    public gap: number = 0
-
     constructor(
-        public readonly field: MazeCell[]
+        public readonly field: MazeCell[],
+        public readonly gap: number
     ) {
         this.mazeWidth = Math.max(...this.field.map(c => c.index.x)) + 1
         this.mazeHeight = Math.max(...this.field.map(c => c.index.y)) + 1

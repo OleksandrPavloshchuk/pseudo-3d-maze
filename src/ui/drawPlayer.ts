@@ -1,5 +1,5 @@
 import {Player} from "../model/Player"
-import {Intersection} from "../model/IntersectionsDetector"
+import {Intersection} from "../model/Point";
 
 function drawViewAngle(
     context: CanvasRenderingContext2D,

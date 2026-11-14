@@ -1,12 +1,13 @@
 import {Maze} from "../model/Maze"
 import {MazeCell, type MazeCellType} from "../model/MazeCell"
+import {TEXTURE_SIZE} from "../textures/textureStorage";
 
 export const drawMaze = (
     context: CanvasRenderingContext2D,
     maze: Maze,
     mapScale: number   // "4" means, that original scale of maze map is 1/4
 ) => {
-    const cellSize = maze.cellSize / mapScale
+    const cellSize = TEXTURE_SIZE / mapScale
 
     maze.field.forEach((cell: MazeCell) => {
         context.fillStyle = getColor(cell.type)

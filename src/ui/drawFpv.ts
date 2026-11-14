@@ -1,4 +1,4 @@
-import {CEILING_PIXEL, FLOOR_PIXEL, setPixel} from "./utils"
+import {CEILING_PIXEL, FLOOR_PIXEL, setPixel} from "./Pixel"
 import {getPixelFromTexture, TEXTURE_SIZE} from "../textures/textureStorage";
 import {Intersection} from "../model/Point";
 
