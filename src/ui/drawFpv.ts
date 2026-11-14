@@ -4,33 +4,38 @@ import {getColor} from "./utils"
 
 const K = 10_000
 
-const drawCeiling = (context: CanvasRenderingContext2D, width: number, height: number) => {
-    context.fillStyle = "azure"
-    context.fillRect(0, 0, width, height / 2)
+const drawPixel = (
+    context: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    fillColor: string
+) => {
+    context.fillStyle = fillColor
+    context.fillRect(x - 1, y - 1, 2, 2)
 }
 
-const drawFloor = (context: CanvasRenderingContext2D, width: number, height: number) => {
-    context.fillStyle = getColor("empty")
-    context.fillRect(0, height / 2, width, height / 2)
-}
-
-const drawWalls = (context: CanvasRenderingContext2D, width: number, height: number, player: Player, intersections: Intersection[], ) => {
-    // TODO 1st attempt
-    let x = 0
-    const stepX = width / player.viewAngleSteps
-    intersections.forEach(intersection => {
-        const lineHeight = K / intersection.distance
-
-        context.beginPath()
-        context.moveTo(x, height / 2 - lineHeight)
-        context.lineTo(x, height / 2 + lineHeight)
-
-        context.strokeStyle = getColor(intersection.cell.type)
-        context.lineWidth = 2;
-        context.stroke();
-
-        x += stepX
-    })
+const drawVerticalLine = (
+    context: CanvasRenderingContext2D,
+    x: number,
+    height: number,
+    intersection: Intersection
+) => {
+    // TODO very slow
+    const lineHeight = K / intersection.distance
+    for (let y = 0; y < height; y++) {
+        let color
+        if (y < height / 2 - lineHeight) {
+            // floor
+            color = "powderblue"
+        } else if (y > height / 2 + lineHeight) {
+            // ceiling
+            color = "azure"
+        } else {
+            // wall
+            color = getColor(intersection.cell.type)
+        }
+        drawPixel(context, x, y, color)
+    }
 }
 
 export const drawFpv = (
@@ -40,7 +45,10 @@ export const drawFpv = (
     player: Player,
     intersections: Intersection[]
 ) => {
-    drawCeiling(context, width, height);
-    drawFloor(context, width, height);
-    drawWalls(context, width, height, player, intersections);
+    let x = 0
+    const stepX = width / player.viewAngleSteps
+    intersections.forEach(intersection => {
+        drawVerticalLine(context, x, height, intersection)
+        x += stepX
+    })
 }
