@@ -2,19 +2,19 @@ import {Player} from "../model/Player"
 import {Intersection} from "../model/IntersectionsDetector"
 import {getColor} from "./utils"
 
-const K = 8_000
+const K = 10_000
 
-function drawCeiling(context: CanvasRenderingContext2D, width: number, height: number) {
+const drawCeiling = (context: CanvasRenderingContext2D, width: number, height: number) => {
     context.fillStyle = "azure"
     context.fillRect(0, 0, width, height / 2)
 }
 
-function drawFloor(context: CanvasRenderingContext2D, width: number, height: number) {
+const drawFloor = (context: CanvasRenderingContext2D, width: number, height: number) => {
     context.fillStyle = getColor("empty")
     context.fillRect(0, height / 2, width, height / 2)
 }
 
-function drawWalls(context: CanvasRenderingContext2D, width: number, height: number, player: Player, intersections: Intersection[], ) {
+const drawWalls = (context: CanvasRenderingContext2D, width: number, height: number, player: Player, intersections: Intersection[], ) => {
     // TODO 1st attempt
     let x = 0
     const stepX = width / player.viewAngleSteps
@@ -26,7 +26,7 @@ function drawWalls(context: CanvasRenderingContext2D, width: number, height: num
         context.lineTo(x, height / 2 + lineHeight)
 
         context.strokeStyle = getColor(intersection.cell.type)
-        context.lineWidth = 4;
+        context.lineWidth = 2;
         context.stroke();
 
         x += stepX

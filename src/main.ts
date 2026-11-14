@@ -82,7 +82,7 @@ async function initialize(): Promise<void> {
     mapCanvas.width = cellSize * maze!.mazeWidth / mapScale
     mapCanvas.height = cellSize * maze!.mazeHeight / mapScale
 
-    player = new Player({x: cellSize * 1.5, y: cellSize * 1.5})
+    player = new Player({x: cellSize * 1.5, y: cellSize * 1.5}, povWidth)
 
     addKeyboardListener()
 

@@ -6,12 +6,17 @@ export class Player {
     private readonly moveStep = 3
 
     public readonly viewAngleHalfWidth = Math.PI / 4
-    public readonly viewAngleStep = Math.PI / 512
-    public readonly viewAngleSteps = 2 * this.viewAngleHalfWidth / this.viewAngleStep
+    public viewAngleStep
+    public viewAngleSteps
 
     public viewAngleMiddle: number = Math.PI / 2
 
-    constructor(public readonly position: Point) {
+    constructor(
+        public readonly position: Point,
+        fpvWidth: number)
+    {
+        this.viewAngleStep = Math.PI / fpvWidth
+        this.viewAngleSteps = 2 * this.viewAngleHalfWidth / this.viewAngleStep
     }
 
     turnLeft = () => {
