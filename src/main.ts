@@ -3,11 +3,11 @@ import {Player} from "./model/Player"
 import {loadMaze} from "./loadMaze"
 import {drawPlayer} from "./ui/drawPlayer"
 import {drawMaze} from "./ui/drawMaze"
-import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector"
+import {IntersectionsDetector} from "./model/IntersectionsDetector"
 import {createFpvImageData} from "./ui/drawFpv"
-import {prepareTexture} from "./textures/textureStorage";
+import {prepareTexture, TEXTURE_SIZE} from "./textures/textureStorage";
+import {Intersection} from "./model/Point";
 
-const cellSize = 64
 const playerWallGap = 6
 
 const mapScale = 4 // "4" means, that map scale is 1/4
@@ -88,12 +88,12 @@ async function initialize(): Promise<void> {
     fpvCanvas.width = fpvWidth
     fpvCanvas.height = fpvHeight
 
-    maze = await loadMaze("/maze_samples/2.txt", cellSize, playerWallGap)
+    maze = await loadMaze("/maze_samples/2.txt", playerWallGap)
     mapContext = getContext(mapCanvas)
-    mapCanvas.width = cellSize * maze!.mazeWidth / mapScale
-    mapCanvas.height = cellSize * maze!.mazeHeight / mapScale
+    mapCanvas.width = TEXTURE_SIZE * maze!.mazeWidth / mapScale
+    mapCanvas.height = TEXTURE_SIZE * maze!.mazeHeight / mapScale
 
-    player = new Player({x: cellSize * 1.5, y: cellSize * 1.5}, fpvWidth)
+    player = new Player({x: TEXTURE_SIZE * 1.5, y: TEXTURE_SIZE * 1.5}, fpvWidth)
 
     addKeyboardListener()
 
