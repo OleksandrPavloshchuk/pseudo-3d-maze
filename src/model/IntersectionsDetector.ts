@@ -1,14 +1,7 @@
 import {Player} from "./Player"
 import {Maze} from "./Maze"
-import {Point} from "./Point"
+import {Intersection, Point} from "./Point"
 import {MazeCell} from "./MazeCell"
-
-export interface Intersection {
-    a: number
-    point: Point
-    cell: MazeCell,
-    distance: number
-}
 
 export class IntersectionsDetector {
 
@@ -26,14 +19,16 @@ export class IntersectionsDetector {
             const dx = Math.cos(a + this.player.viewAngleMiddle)
             const dy = Math.sin(a + this.player.viewAngleMiddle)
 
-            let min: Intersection|undefined = undefined
+            let min: Intersection | undefined = undefined
 
             for (let cell of this.maze.field) {
                 if (cell.type != "empty") {
                     const intersections = cell.getEdgesIntersection(this.player.position, dx, dy)
-                    intersections.forEach(point => {
-                        const i = {a, cell, point, distance: this.distance(point)}
-                        if (!min || min.distance > i.distance) {
+                    intersections.forEach(i => {
+                        i.a = a
+                        i.cell = cell
+                        i.distance = this.distance(i.point)
+                        if (!min || min.distance! > i.distance!) {
                             min = i
                         }
                     })

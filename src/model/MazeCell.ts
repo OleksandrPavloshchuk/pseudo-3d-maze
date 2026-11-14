@@ -1,4 +1,4 @@
-import {Point} from "./Point"
+import {type Intersection, Point} from "./Point"
 
 export type MazeCellType = "empty" | "wall" | "picture" | "exitDoor"
 
@@ -21,36 +21,58 @@ export class MazeCell {
         )
     }
 
-    getEdgesIntersection = (src: Point, dx: number, dy: number): Point[] => {
+    getEdgesIntersection = (
+        src: Point,
+        dx: number,
+        dy: number
+    ): Intersection[] => {
         if (dx === 0) {
             return this.calculateVerticalEdgesIntersection(src)
         } else if (dy === 0) {
             return this.calculateHorizontalEdgesIntersection(src)
         }
-        const all: Point[] = []
+        const all: Intersection[] = []
 
         all.push(this.intersectVertical(src, dx, dy, this.x0()))
         all.push(this.intersectVertical(src, dx, dy, this.x1()))
         all.push(this.intersectHorizontal(src, dx, dy, this.y0()))
         all.push(this.intersectHorizontal(src, dx, dy, this.y1()))
 
-        return all.filter(p => this.isOnEdge(p) && this.isOnRay(src, p, dx, dy))
+        return all.filter(i => this.isOnEdge(i.point) && this.isOnRay(src, i.point, dx, dy))
     }
 
-    private calculateVerticalEdgesIntersection = (src: Point): Point[] => {
-        return [{x: this.x0(), y: src.y}, {x: this.x1(), y: src.y}]
+    private calculateVerticalEdgesIntersection = (src: Point): Intersection[] => {
+        return [
+            {point: {x: this.x0(), y: src.y}, edge: "vertical"},
+            {point: {x: this.x1(), y: src.y}, edge: "vertical"}
+        ]
     }
 
-    private calculateHorizontalEdgesIntersection = (src: Point): Point[] => {
-        return [{x: src.x, y: this.y0()}, {x: src.x, y: this.y1()}]
+    private calculateHorizontalEdgesIntersection = (src: Point): Intersection[] => {
+        return [
+            {point: {x: src.x, y: this.y0()}, edge: "horizontal"},
+            {point: {x: src.x, y: this.y1()}, edge: "horizontal"}
+        ]
     }
 
-    private intersectVertical = (p: Point, dx: number, dy: number, x: number): Point => {
-        return {x, y: p.y + (x - p.x) * dy / dx}
+    private intersectVertical = (p: Point, dx: number, dy: number, x: number): Intersection => {
+        return {
+            point: {
+                x,
+                y: p.y + (x - p.x) * dy / dx
+            },
+            edge: "vertical"
+        }
     }
 
-    private intersectHorizontal = (p: Point, dx: number, dy: number, y: number): Point => {
-        return {x: p.x + (y - p.y) * dx / dy, y}
+    private intersectHorizontal = (p: Point, dx: number, dy: number, y: number): Intersection => {
+        return {
+            point: {
+                x: p.x + (y - p.y) * dx / dy,
+                y
+            },
+            edge: "horizontal"
+        }
     }
 
     private isOnEdge = (p: Point) => {

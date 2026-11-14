@@ -5,6 +5,7 @@ import {drawPlayer} from "./ui/drawPlayer"
 import {drawMaze} from "./ui/drawMaze"
 import {Intersection, IntersectionsDetector} from "./model/IntersectionsDetector"
 import {createFpvImageData} from "./ui/drawFpv"
+import {prepareTexture} from "./textures/textureStorage";
 
 const cellSize = 64
 const playerWallGap = 6
@@ -73,7 +74,16 @@ const getContext = (canvas: HTMLCanvasElement)=> {
     return result
 }
 
+const prepareTextures = async () => {
+    await prepareTexture("picture")
+    await prepareTexture("wall")
+    await prepareTexture("exitDoor")
+}
+
 async function initialize(): Promise<void> {
+
+    await prepareTextures()
+
     fpvContext = getContext(fpvCanvas)
     fpvCanvas.width = fpvWidth
     fpvCanvas.height = fpvHeight
