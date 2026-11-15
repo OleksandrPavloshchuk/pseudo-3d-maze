@@ -8,17 +8,15 @@ export class MazeCell {
     constructor(
         public readonly index: Point,
         public readonly center: Point,
-        public readonly cellSize: number,
         public readonly type: MazeCellType
     ) {
     }
 
     isCollided = (pos: Point, gap: number) => {
-        const cellSize = this.cellSize
-        return (pos.x >= this.center.x - cellSize / 2 - gap
-            && pos.x <= this.center.x + cellSize / 2 + gap
-            && pos.y >= this.center.y - cellSize / 2 - gap
-            && pos.y <= this.center.y + cellSize / 2 + gap
+        return (pos.x >= this.center.x - TEXTURE_SIZE / 2 - gap
+            && pos.x <= this.center.x + TEXTURE_SIZE / 2 + gap
+            && pos.y >= this.center.y - TEXTURE_SIZE / 2 - gap
+            && pos.y <= this.center.y + TEXTURE_SIZE / 2 + gap
         )
     }
 
@@ -90,10 +88,10 @@ export class MazeCell {
         return false
     }
 
-    private x0 = () => this.center.x - this.cellSize / 2
-    private x1 = () => this.center.x + this.cellSize / 2
-    private y0 = () => this.center.y - this.cellSize / 2
-    private y1 = () => this.center.y + this.cellSize / 2
+    private x0 = () => this.center.x - TEXTURE_SIZE / 2
+    private x1 = () => this.center.x + TEXTURE_SIZE / 2
+    private y0 = () => this.center.y - TEXTURE_SIZE / 2
+    private y1 = () => this.center.y + TEXTURE_SIZE / 2
 
     private isOnRay = (src: Point, p: Point, dx: number, dy: number) => {
         return (p.x - src.x) * dx + (p.y - src.y) * dy >= 0

@@ -23,7 +23,6 @@ export const prepareTexture = async (type: MazeCellType) => {
 
 export const getPixelFromTexture = (
     type: MazeCellType,
-    width: number,
     x: number,
     y: number
 ): Pixel | undefined => {
@@ -32,7 +31,7 @@ export const getPixelFromTexture = (
         return undefined
     }
 
-    const index = (y * width + x) * 4
+    const index = (y * TEXTURE_SIZE + x) * 4
     return {
         red: pixels.data[index],
         green: pixels.data[index + 1],

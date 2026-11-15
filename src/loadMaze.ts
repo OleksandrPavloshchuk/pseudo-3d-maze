@@ -28,7 +28,6 @@ export const loadMaze = async (mazeResource: string, playerWallGap: number): Pro
             field.push(new MazeCell(
                 {x, y},
                 {x: (x + 0.5) * TEXTURE_SIZE, y: (y + 0.5) * TEXTURE_SIZE},
-                TEXTURE_SIZE,
                 getType(rows[y].charAt(x))
             ))
         }

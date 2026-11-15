@@ -69,13 +69,13 @@ const getWallPixel = (
     const cell = intersection.cell!
 
     const edgeStart = intersection.edge === "horizontal"
-        ? cell.center.x - cell.cellSize / 2
-        : cell.center.y - cell.cellSize / 2
+        ? cell.center.x - TEXTURE_SIZE / 2
+        : cell.center.y - TEXTURE_SIZE / 2
 
     const textureX = Math.floor(
-        (offset - edgeStart) / cell.cellSize * TEXTURE_SIZE
+        (offset - edgeStart) / TEXTURE_SIZE * TEXTURE_SIZE
     )
 
-    return getPixelFromTexture(intersection.cell!.type, TEXTURE_SIZE, textureX, textureY)
+    return getPixelFromTexture(intersection.cell!.type, textureX, textureY)
 
 }
