@@ -1,4 +1,5 @@
 import {type Intersection, Point} from "./Point"
+import {TEXTURE_SIZE} from "../textures/textureStorage";
 
 export type MazeCellType = "empty" | "wall" | "picture" | "exitDoor"
 
