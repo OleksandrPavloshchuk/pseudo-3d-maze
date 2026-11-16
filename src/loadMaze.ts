@@ -10,6 +10,8 @@ const getType = (src: string): MazeCellType => {
             return "exitDoor"
         case "P":
             return "picture"
+        case "O":
+            return "window"
         default:
             return "empty"
     }

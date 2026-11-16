@@ -1,7 +1,6 @@
 import {Player} from "./Player"
 import {Maze} from "./Maze"
 import {Intersection, Point} from "./Point"
-import {MazeCell} from "./MazeCell"
 
 export class IntersectionsDetector {
 

@@ -78,6 +78,7 @@ const prepareTextures = async () => {
     await prepareTexture("picture")
     await prepareTexture("wall")
     await prepareTexture("exitDoor")
+    await prepareTexture("window")
 }
 
 async function initialize(): Promise<void> {
@@ -88,7 +89,7 @@ async function initialize(): Promise<void> {
     fpvCanvas.width = fpvWidth
     fpvCanvas.height = fpvHeight
 
-    maze = await loadMaze("/maze_samples/2.txt", playerWallGap)
+    maze = await loadMaze("/maze_samples/3.txt", playerWallGap)
     mapContext = getContext(mapCanvas)
     mapCanvas.width = TEXTURE_SIZE * maze!.mazeWidth / mapScale
     mapCanvas.height = TEXTURE_SIZE * maze!.mazeHeight / mapScale

@@ -24,7 +24,7 @@ export class Intersection {
     }
 
     getTextureX = () => Math.floor(
-        (this.getOffset() - this.getEdgeStart()) / TEXTURE_SIZE * TEXTURE_SIZE
+        this.getOffset() - this.getEdgeStart()
     )
 
     private getOffset = () => this.edge === "horizontal"
