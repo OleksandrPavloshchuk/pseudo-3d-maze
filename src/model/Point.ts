@@ -17,6 +17,12 @@ export class Intersection {
     ) {
     }
 
+    enrich = (a: number, cell: MazeCell, distance: number)=> {
+        this.a = a
+        this.cell = cell
+        this.distance = distance
+    }
+
     getTextureX = () => Math.floor(
         (this.getOffset() - this.getEdgeStart()) / TEXTURE_SIZE * TEXTURE_SIZE
     )

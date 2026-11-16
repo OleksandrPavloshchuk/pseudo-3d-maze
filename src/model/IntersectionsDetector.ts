@@ -24,9 +24,7 @@ export class IntersectionsDetector {
             for (let cell of this.maze.field) {
                 if (cell.isWall()) {
                     cell.getEdgesIntersection(this.player.position, dx, dy).forEach(i => {
-                        i.a = a
-                        i.cell = cell
-                        i.distance = this.distance(i.point)
+                        i.enrich(a, cell, this.distance(i.point))
                         if (!min || min.distance! > i.distance!) {
                             min = i
                         }
