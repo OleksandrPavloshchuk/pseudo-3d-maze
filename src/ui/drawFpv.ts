@@ -1,4 +1,4 @@
-import {CEILING_PIXEL, FLOOR_PIXEL, setPixel} from "./Pixel"
+import {CEILING_PIXEL, FLOOR_PIXEL, Pixel, setPixel} from "./Pixel"
 import {getPixelFromTexture, TEXTURE_SIZE} from "../textures/textureStorage";
 import {Intersection} from "../model/Point";
 
@@ -13,14 +13,7 @@ export const createFpvImageData = (
     const imageData = context.createImageData(imageWidth, imageHeight)
     for (let x = 0; x < imageWidth; x++) {
         const index = Math.floor(x * intersections.length / imageWidth)
-
-        drawVerticalLine(
-            imageData,
-            x,
-            imageWidth,
-            imageHeight,
-            intersections[index]
-        )
+        drawVerticalLine(imageData, x, imageWidth, imageHeight, intersections[index])
     }
     context.putImageData(imageData, 0, 0)
 }
@@ -40,17 +33,24 @@ const drawVerticalLine = (
     const wallBottom = Math.floor((height + lineHeight) / 2)
 
     for (let y = 0; y < height; y++) {
-        let pixel
-
-        if (y < wallTop) {
-            pixel = CEILING_PIXEL
-        } else if (y >= wallBottom) {
-            pixel = FLOOR_PIXEL
-        } else {
-            pixel = getWallPixel(y, lineHeight, wallTop, intersection)
-        }
-        setPixel(data, width, x, y, pixel!)
+        setPixel(data, width, x, y, getPixel(y, wallTop, wallBottom, lineHeight, intersection))
     }
+}
+
+const getPixel = (
+    y: number,
+    wallTop: number,
+    wallBottom: number,
+    lineHeight: number,
+    intersection: Intersection
+): Pixel => {
+    if (y < wallTop) {
+        return CEILING_PIXEL
+    }
+    if (y >= wallBottom) {
+        return FLOOR_PIXEL
+    }
+    return getWallPixel(y, lineHeight, wallTop, intersection)
 }
 
 const getWallPixel = (
@@ -64,18 +64,6 @@ const getWallPixel = (
         Math.floor((y - wallTop) * TEXTURE_SIZE / lineHeight)
     )
 
-    const offset = intersection.edge === "horizontal" ? intersection.point.x : intersection.point.y
-
-    const cell = intersection.cell!
-
-    const edgeStart = intersection.edge === "horizontal"
-        ? cell.center.x - TEXTURE_SIZE / 2
-        : cell.center.y - TEXTURE_SIZE / 2
-
-    const textureX = Math.floor(
-        (offset - edgeStart) / TEXTURE_SIZE * TEXTURE_SIZE
-    )
-
-    return getPixelFromTexture(intersection.cell!.type, textureX, textureY)
+    return getPixelFromTexture(intersection.cell!.type, intersection.getTextureX(), textureY)
 
 }

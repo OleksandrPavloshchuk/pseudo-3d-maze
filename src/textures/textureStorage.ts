@@ -5,7 +5,7 @@ export const TEXTURE_SIZE = 64
 
 export const prepareTexture = async (type: MazeCellType) => {
 
-    const url = `public/textures/${type}.png`
+    const url = `/textures/${type}.png`
     const image = new Image()
     image.src = url
 
@@ -25,10 +25,10 @@ export const getPixelFromTexture = (
     type: MazeCellType,
     x: number,
     y: number
-): Pixel | undefined => {
+): Pixel => {
     const pixels = storage.get(type)
     if (!pixels) {
-        return undefined
+        return NO_TEXTURE
     }
 
     const index = (y * TEXTURE_SIZE + x) * 4
@@ -40,3 +40,4 @@ export const getPixelFromTexture = (
 }
 
 const storage: Map<MazeCellType, ImageData> = new Map()
+const NO_TEXTURE = {red: 0, green: 0, blue: 0}

@@ -22,9 +22,8 @@ export class IntersectionsDetector {
             let min: Intersection | undefined = undefined
 
             for (let cell of this.maze.field) {
-                if (cell.type != "empty") {
-                    const intersections = cell.getEdgesIntersection(this.player.position, dx, dy)
-                    intersections.forEach(i => {
+                if (cell.isWall()) {
+                    cell.getEdgesIntersection(this.player.position, dx, dy).forEach(i => {
                         i.a = a
                         i.cell = cell
                         i.distance = this.distance(i.point)
@@ -42,9 +41,9 @@ export class IntersectionsDetector {
         return result
     }
 
-    private pow2 = (n: number) => n * n
-
     private distance = (p: Point) =>
-        Math.sqrt(this.pow2(p.x - this.player.position.x) + this.pow2(p.y - this.player.position.y))
+        Math.sqrt(pow2(p.x - this.player.position.x) + pow2(p.y - this.player.position.y))
 
 }
+
+const pow2 = (n: number) => n * n

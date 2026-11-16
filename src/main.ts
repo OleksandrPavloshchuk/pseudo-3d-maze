@@ -10,10 +10,10 @@ import {Intersection} from "./model/Point";
 
 const playerWallGap = 6
 
-const mapScale = 4 // "4" means, that map scale is 1/4
+const mapScale = 8 // "8" means, that map scale is 1/8
 
 const fpvWidth = 1024
-const fpvHeight = 800
+const fpvHeight = 768
 
 const mapCanvas = document.getElementById("maze-map-canvas") as HTMLCanvasElement
 let mapContext: CanvasRenderingContext2D | null = null

@@ -1,4 +1,4 @@
-import {type Intersection, Point} from "./Point"
+import {Intersection, Point} from "./Point"
 import {TEXTURE_SIZE} from "../textures/textureStorage";
 
 export type MazeCellType = "empty" | "wall" | "picture" | "exitDoor"
@@ -11,6 +11,8 @@ export class MazeCell {
         public readonly type: MazeCellType
     ) {
     }
+
+    isWall = () => this.type != "empty"
 
     isCollided = (pos: Point, gap: number) => {
         return (pos.x >= this.center.x - TEXTURE_SIZE / 2 - gap
@@ -27,7 +29,8 @@ export class MazeCell {
     ): Intersection[] => {
         if (dx === 0) {
             return this.calculateVerticalEdgesIntersection(src)
-        } else if (dy === 0) {
+        }
+        if (dy === 0) {
             return this.calculateHorizontalEdgesIntersection(src)
         }
         const all: Intersection[] = []
@@ -37,41 +40,29 @@ export class MazeCell {
         all.push(this.intersectHorizontal(src, dx, dy, this.y0()))
         all.push(this.intersectHorizontal(src, dx, dy, this.y1()))
 
-        return all.filter(i => this.isOnEdge(i.point) && this.isOnRay(src, i.point, dx, dy))
+        return all.filter(i => this.isOnEdge(i.point) && isOnRay(src, i.point, dx, dy))
     }
 
     private calculateVerticalEdgesIntersection = (src: Point): Intersection[] => {
         return [
-            {point: {x: this.x0(), y: src.y}, edge: "vertical"},
-            {point: {x: this.x1(), y: src.y}, edge: "vertical"}
+            new Intersection({x: this.x0(), y: src.y}, "vertical"),
+            new Intersection({x: this.x1(), y: src.y}, "vertical")
         ]
     }
 
     private calculateHorizontalEdgesIntersection = (src: Point): Intersection[] => {
         return [
-            {point: {x: src.x, y: this.y0()}, edge: "horizontal"},
-            {point: {x: src.x, y: this.y1()}, edge: "horizontal"}
+            new Intersection({x: src.x, y: this.y0()}, "horizontal"),
+            new Intersection({x: src.x, y: this.y1()}, "horizontal")
         ]
     }
 
     private intersectVertical = (p: Point, dx: number, dy: number, x: number): Intersection => {
-        return {
-            point: {
-                x,
-                y: p.y + (x - p.x) * dy / dx
-            },
-            edge: "vertical"
-        }
+        return new Intersection({x, y: p.y + (x - p.x) * dy / dx}, "vertical")
     }
 
     private intersectHorizontal = (p: Point, dx: number, dy: number, y: number): Intersection => {
-        return {
-            point: {
-                x: p.x + (y - p.y) * dx / dy,
-                y
-            },
-            edge: "horizontal"
-        }
+        return new Intersection({x: p.x + (y - p.y) * dx / dy, y}, "horizontal")
     }
 
     private isOnEdge = (p: Point) => {
@@ -93,8 +84,10 @@ export class MazeCell {
     private y0 = () => this.center.y - TEXTURE_SIZE / 2
     private y1 = () => this.center.y + TEXTURE_SIZE / 2
 
-    private isOnRay = (src: Point, p: Point, dx: number, dy: number) => {
-        return (p.x - src.x) * dx + (p.y - src.y) * dy >= 0
-    }
 }
+
+const isOnRay = (src: Point, p: Point, dx: number, dy: number) => {
+    return (p.x - src.x) * dx + (p.y - src.y) * dy >= 0
+}
+
 

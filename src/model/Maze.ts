@@ -15,7 +15,7 @@ export class Maze {
 
     isCollided = (pos: Point): boolean => {
         for (const cell of this.field) {
-            if (cell.type != "empty" && cell.isCollided(pos, this.gap)) {
+            if (cell.isWall() && cell.isCollided(pos, this.gap)) {
                 return true
             }
         }
