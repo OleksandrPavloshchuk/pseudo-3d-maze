@@ -2,7 +2,7 @@ import {CEILING_PIXEL, FLOOR_PIXEL, Pixel, setPixel} from "./Pixel"
 import {getPixelFromTexture, TEXTURE_SIZE} from "../textures/textureStorage";
 import {Intersection} from "../model/Point";
 
-const K = 25_000
+const K = 35_000
 
 export const createFpvImageData = (
     context: CanvasRenderingContext2D,
