@@ -66,7 +66,7 @@ const redraw = () => {
     draw(mapContext!, fpvContext!)
 }
 
-const getContext = (canvas: HTMLCanvasElement)=> {
+const getContext = (canvas: HTMLCanvasElement) => {
     const result = canvas.getContext("2d");
     if (!result) {
         throw new Error("Context is unavailable");
@@ -79,6 +79,7 @@ const prepareTextures = async () => {
     await prepareTexture("wall")
     await prepareTexture("exitDoor")
     await prepareTexture("window")
+    await prepareTexture("floor")
 }
 
 async function initialize(): Promise<void> {

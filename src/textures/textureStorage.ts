@@ -1,9 +1,16 @@
-import type {MazeCellType} from "../model/MazeCell.ts";
 import type {Pixel} from "../ui/Pixel.ts";
+import {MazeCellType} from "../model/MazeCell";
 
 export const TEXTURE_SIZE = 64
 
-export const prepareTexture = async (type: MazeCellType) => {
+export type HorizontalTexture = "floor" | "ceiling"
+
+export type TextureType = HorizontalTexture | MazeCellType
+
+export const prepareTexture = async (
+    type: TextureType
+
+) => {
 
     const url = `/textures/${type}.png`
     const image = new Image()
@@ -22,7 +29,7 @@ export const prepareTexture = async (type: MazeCellType) => {
 }
 
 export const getPixelFromTexture = (
-    type: MazeCellType,
+    type: TextureType,
     x: number,
     y: number
 ): Pixel => {
@@ -39,5 +46,5 @@ export const getPixelFromTexture = (
     }
 }
 
-const storage: Map<MazeCellType, ImageData> = new Map()
+const storage: Map<TextureType, ImageData> = new Map()
 const NO_TEXTURE = {red: 0, green: 0, blue: 0}

@@ -8,6 +8,8 @@ export interface Point {
 
 export class Intersection {
     public a?: number
+    public dx?: number
+    public dy?: number
     public cell?: MazeCell
     public distance?: number
 
@@ -17,8 +19,16 @@ export class Intersection {
     ) {
     }
 
-    enrich = (a: number, cell: MazeCell, distance: number)=> {
+    enrich = (
+        a: number,
+        dx: number,
+        dy: number,
+        cell: MazeCell,
+        distance: number
+    )=> {
         this.a = a
+        this.dx = dx
+        this.dy = dy
         this.cell = cell
         this.distance = distance
     }
