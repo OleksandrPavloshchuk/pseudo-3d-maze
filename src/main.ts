@@ -3,7 +3,7 @@ import {Player} from "./model/Player"
 import {loadMaze} from "./loadMaze"
 import {drawPlayer} from "./ui/drawPlayer"
 import {drawMaze} from "./ui/drawMaze"
-import {IntersectionsDetector} from "./model/IntersectionsDetector"
+import {RayIntersections, IntersectionsDetector} from "./model/IntersectionsDetector"
 import {createFpvImageData} from "./ui/drawFpv"
 import {prepareTexture, TEXTURE_SIZE} from "./textures/textureStorage";
 import {Intersection} from "./model/Point";
@@ -12,8 +12,8 @@ const playerWallGap = 6
 
 const mapScale = 8 // "8" means, that map scale is 1/8
 
-const fpvWidth = 1024
-const fpvHeight = 768
+const fpvWidth = 800
+const fpvHeight = 600
 
 const mapCanvas = document.getElementById("maze-map-canvas") as HTMLCanvasElement
 let mapContext: CanvasRenderingContext2D | null = null
@@ -23,7 +23,7 @@ let fpvContext: CanvasRenderingContext2D | null = null
 
 let maze: Maze | undefined = undefined
 let player: Player | undefined = undefined
-let intersections: Intersection[] = []
+let intersections: RayIntersections[] = []
 
 function draw(
     mapContext: CanvasRenderingContext2D,

@@ -1,14 +1,15 @@
 import {CEILING_PIXEL, FLOOR_PIXEL, Pixel, setPixel} from "./Pixel"
 import {getPixelFromTexture, TEXTURE_SIZE} from "../textures/textureStorage";
 import {Intersection} from "../model/Point";
+import {RayIntersections} from "../model/IntersectionsDetector";
 
-const K = 35_000
+const K = 25_000
 
 export const createFpvImageData = (
     context: CanvasRenderingContext2D,
     imageWidth: number,
     imageHeight: number,
-    intersections: Intersection[]
+    intersections: RayIntersections[]
 ) => {
     const imageData = context.createImageData(imageWidth, imageHeight)
     for (let x = 0; x < imageWidth; x++) {
@@ -23,17 +24,19 @@ const drawVerticalLine = (
     x: number,
     width: number,
     height: number,
-    intersection: Intersection
+    intersection: RayIntersections
 ) => {
     const data = imageData.data
 
-    const lineHeight = K / intersection.distance!
+    const wallIntersection = intersection.wall
+
+    const lineHeight = K / wallIntersection.distance!
 
     const wallTop = Math.floor((height - lineHeight) / 2)
     const wallBottom = Math.floor((height + lineHeight) / 2)
 
     for (let y = 0; y < height; y++) {
-        setPixel(data, width, x, y, getPixel(y, wallTop, wallBottom, lineHeight, intersection))
+        setPixel(data, width, x, y, getPixel(y, wallTop, wallBottom, lineHeight, wallIntersection))
     }
 }
 

@@ -2,7 +2,7 @@ import {Maze} from "./Maze"
 import {Point} from "./Point"
 
 export class Player {
-    private readonly turnStep = 0.1
+    private readonly turnStep = 0.15
     private readonly moveStep = 3
 
     public readonly viewAngleHalfWidth = Math.PI / 4
