@@ -23,10 +23,8 @@ export class IntersectionsDetector {
             for (let cell of this.maze.field) {
                 cell.getEdgesIntersection(this.player.position, dx, dy).forEach(i => {
                     i.enrich(a, dx, dy, cell, this.distance(i.point))
-                    if (cell.isWall()) {
-                        if (!min || min.distance! > i.distance!) {
-                            min = i
-                        }
+                    if (cell.isWall() && (!min || min.distance! > i.distance!)) {
+                        min = i
                     }
                 })
             }
