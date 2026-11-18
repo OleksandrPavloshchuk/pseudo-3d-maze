@@ -32,7 +32,7 @@ function draw(
     drawMaze(mapContext, maze!, mapScale)
     drawPlayer(mapContext, player!, intersections, mapScale)
 
-    createFpvImageData(fpvContext, fpvWidth, fpvHeight, intersections)
+    createFpvImageData(fpvContext, fpvWidth, fpvHeight, intersections, player!.position)
 }
 
 function addKeyboardListener() {
