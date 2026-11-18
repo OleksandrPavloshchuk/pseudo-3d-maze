@@ -75,28 +75,5 @@ const getFloorPixel = (
     height: number,
     intersection: Intersection
 ): Pixel => {
-
-    // const denominator = 2 * y - height
-    const denominator = 2 * y
-
-    /* if (denominator <= 0) {
-        return FLOOR_PIXEL
-    } */
-
-    const distance = K / denominator
-
-    const delta = distance - intersection.distance!
-
-    const worldX = (intersection.point.x + delta * intersection.dx!) / 8
-    const worldY = (intersection.point.y + delta * intersection.dy!) / 8
-
-    const textureX = Math.floor(
-        (worldX - Math.floor(worldX)) * TEXTURE_SIZE
-    )
-
-    const textureY = Math.floor(
-        (worldY - Math.floor(worldY)) * TEXTURE_SIZE
-    )
-
-    return getPixelFromTexture("floor", textureX, textureY)
+    return FLOOR_PIXEL
 }
