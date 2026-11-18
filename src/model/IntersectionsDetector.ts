@@ -2,14 +2,6 @@ import {Player} from "./Player"
 import {Maze} from "./Maze"
 import {Intersection, Point} from "./Point"
 
-export class RayIntersections {
-    constructor(
-        public readonly wall: Intersection,
-        public readonly floors: Intersection[] = []
-    ) {
-    }
-}
-
 export class IntersectionsDetector {
 
     constructor(
@@ -20,7 +12,7 @@ export class IntersectionsDetector {
 
     calculate = () => {
 
-        const result: RayIntersections[] = []
+        const result: Intersection[] = []
 
         for (let a = -this.player.viewAngleHalfWidth; a <= this.player.viewAngleHalfWidth; a += this.player.viewAngleStep) {
             const dx = Math.cos(a + this.player.viewAngleMiddle)
@@ -28,7 +20,6 @@ export class IntersectionsDetector {
 
             let min: Intersection | undefined = undefined
 
-            const floors: Intersection[] = []
             for (let cell of this.maze.field) {
                 cell.getEdgesIntersection(this.player.position, dx, dy).forEach(i => {
                     i.enrich(a, dx, dy, cell, this.distance(i.point))
@@ -36,13 +27,11 @@ export class IntersectionsDetector {
                         if (!min || min.distance! > i.distance!) {
                             min = i
                         }
-                    } else {
-                        floors.push(i)
                     }
                 })
             }
             if (min) {
-                result.push(new RayIntersections(min, floors.filter( i => i.distance! < min!.distance!)))
+                result.push(min)
             }
         }
 

@@ -1,6 +1,5 @@
 import {Player} from "../model/Player"
 import {Intersection} from "../model/Point";
-import {RayIntersections} from "../model/IntersectionsDetector";
 
 function drawViewAngle(
     context: CanvasRenderingContext2D,
@@ -38,12 +37,10 @@ function drawPoint(context: CanvasRenderingContext2D, player: Player, mapScale: 
 export const drawPlayer = (
     context: CanvasRenderingContext2D,
     player: Player,
-    intersections: RayIntersections[],
+    intersections: Intersection[],
     mapScale: number
 ) => {
 
-    const wallIntersections = intersections.map( i => i.wall)
-
-    drawViewAngle(context, player, wallIntersections, mapScale);
+    drawViewAngle(context, player, intersections, mapScale);
     drawPoint(context, player, mapScale);
 }

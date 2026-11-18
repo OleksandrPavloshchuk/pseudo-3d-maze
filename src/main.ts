@@ -3,7 +3,7 @@ import {Player} from "./model/Player"
 import {loadMaze} from "./loadMaze"
 import {drawPlayer} from "./ui/drawPlayer"
 import {drawMaze} from "./ui/drawMaze"
-import {RayIntersections, IntersectionsDetector} from "./model/IntersectionsDetector"
+import {IntersectionsDetector} from "./model/IntersectionsDetector"
 import {createFpvImageData} from "./ui/drawFpv"
 import {prepareTexture, TEXTURE_SIZE} from "./textures/textureStorage";
 import {Intersection} from "./model/Point";
@@ -23,7 +23,7 @@ let fpvContext: CanvasRenderingContext2D | null = null
 
 let maze: Maze | undefined = undefined
 let player: Player | undefined = undefined
-let intersections: RayIntersections[] = []
+let intersections: Intersection[] = []
 
 function draw(
     mapContext: CanvasRenderingContext2D,
