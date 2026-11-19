@@ -1,5 +1,5 @@
-import {CEILING_PIXEL, Pixel, setPixel} from "./Pixel"
-import {getPixelFromTexture, TEXTURE_SIZE} from "../textures/textureStorage";
+import {Pixel, setPixel} from "./Pixel"
+import {getPixelFromTexture, TEXTURE_SIZE, TextureType} from "../textures/textureStorage";
 import {Intersection, Point} from "../model/Point";
 
 const K = 25_000
@@ -60,7 +60,7 @@ class FpvRenderer {
         intersection: Intersection
     ): Pixel => {
         if (y < wallTop) {
-            return CEILING_PIXEL
+            return this.getCeilingPixel(y, intersection)
         } else if (y >= wallBottom) {
             return this.getFloorPixel(y, intersection)
         } else {
@@ -84,14 +84,25 @@ class FpvRenderer {
     getFloorPixel = (
         y: number,
         intersection: Intersection,
+    ): Pixel => this.getHorizontalPixel(y, intersection, "floor")
+
+    getCeilingPixel = (
+        y: number,
+        intersection: Intersection,
+    ): Pixel => this.getHorizontalPixel(y, intersection, "ceiling")
+
+    getHorizontalPixel = (
+        y: number,
+        intersection: Intersection,
+        textureType: TextureType
     ): Pixel => {
         // 0.5 - we use center of pixel
-        const distance = K / (2 * (y + 0.5 - this.imageHeight / 2))
+        const distance = K / (2 * Math.abs(y + 0.5 - this.imageHeight / 2))
 
         const worldX = this.playerPosition.x + distance * intersection.dx!
         const worldY = this.playerPosition.y + distance * intersection.dy!
 
-        return getPixelFromTexture("floor", this.toTexture(worldX), this.toTexture(worldY))
+        return getPixelFromTexture(textureType, this.toTexture(worldX), this.toTexture(worldY))
     }
 
     toTexture = (n: number) =>

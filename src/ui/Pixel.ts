@@ -16,15 +16,3 @@ export const setPixel = (
     pixels[index + 2] = pixel.blue
     pixels[index + 3] = 255    // opacity
 }
-
-export const FLOOR_PIXEL = {
-    red: 204,
-    green: 204,
-    blue: 204
-}
-
-export const CEILING_PIXEL = {
-    red: 153,
-    green: 204,
-    blue: 255
-}
