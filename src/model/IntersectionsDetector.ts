@@ -1,6 +1,7 @@
 import {Player} from "./Player"
 import {Maze} from "./Maze"
 import {Intersection, Point} from "./Point"
+import {cosCache, sinCache} from "../trigonometryCache";
 
 export class IntersectionsDetector {
 
@@ -15,8 +16,8 @@ export class IntersectionsDetector {
         const result: Intersection[] = []
 
         for (let a = -this.player.viewAngleHalfWidth; a <= this.player.viewAngleHalfWidth; a += this.player.viewAngleStep) {
-            const dx = Math.cos(a + this.player.viewAngleMiddle)
-            const dy = Math.sin(a + this.player.viewAngleMiddle)
+            const dx = cosCache.get(a + this.player.viewAngleMiddle)
+            const dy = sinCache.get(a + this.player.viewAngleMiddle)
 
             let min: Intersection | undefined = undefined
 

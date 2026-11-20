@@ -1,5 +1,6 @@
 import {Maze} from "./Maze"
 import {Point} from "./Point"
+import {cosCache, sinCache} from "../trigonometryCache";
 
 export class Player {
     private readonly turnStep = 0.15
@@ -34,8 +35,8 @@ export class Player {
     }
 
     stepForward = (maze: Maze) => {
-        const x = this.position.x + Math.cos(this.viewAngleMiddle) * this.moveStep
-        const y = this.position.y + Math.sin(this.viewAngleMiddle) * this.moveStep
+        const x = this.position.x + cosCache.get(this.viewAngleMiddle) * this.moveStep
+        const y = this.position.y + sinCache.get(this.viewAngleMiddle) * this.moveStep
         if (!maze.isCollided({x, y})) {
             this.position.x = x
             this.position.y = y
@@ -43,8 +44,8 @@ export class Player {
     }
 
     stepBackward = (maze: Maze) => {
-        const x = this.position.x - Math.cos(this.viewAngleMiddle) * this.moveStep
-        const y = this.position.y - Math.sin(this.viewAngleMiddle) * this.moveStep
+        const x = this.position.x - cosCache.get(this.viewAngleMiddle) * this.moveStep
+        const y = this.position.y - sinCache.get(this.viewAngleMiddle) * this.moveStep
         if (!maze.isCollided({x, y})) {
             this.position.x = x
             this.position.y = y

@@ -7,13 +7,14 @@ import {IntersectionsDetector} from "./model/IntersectionsDetector"
 import {createFpvImageData} from "./ui/drawFpv"
 import {prepareTexture, TEXTURE_SIZE} from "./textures/textureStorage";
 import {Intersection} from "./model/Point";
+import {cosCache, sinCache} from "./trigonometryCache";
 
 const playerWallGap = 6
 
 const mapScale = 8 // "8" means, that map scale is 1/8
 
-const fpvWidth = 640
-const fpvHeight = 480
+const fpvWidth = 800
+const fpvHeight = 640
 
 const mapCanvas = document.getElementById("maze-map-canvas") as HTMLCanvasElement
 let mapContext: CanvasRenderingContext2D | null = null
@@ -97,6 +98,9 @@ async function initialize(): Promise<void> {
     mapCanvas.height = TEXTURE_SIZE * maze!.mazeHeight / mapScale
 
     player = new Player({x: TEXTURE_SIZE * 1.5, y: TEXTURE_SIZE * 1.5}, fpvWidth)
+
+    cosCache.warmUp(player.viewAngleStep)
+    sinCache.warmUp(player.viewAngleStep)
 
     addKeyboardListener()
 
