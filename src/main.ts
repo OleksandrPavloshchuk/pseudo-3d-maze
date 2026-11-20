@@ -31,7 +31,7 @@ function draw(
     fpvContext: CanvasRenderingContext2D
 ): void {
     drawMaze(mapContext, maze!, mapScale)
-    drawPlayer(mapContext, player!, intersections, mapScale)
+    drawPlayer(mapContext, player!, mapScale)
 
     createFpvImageData(fpvContext, fpvWidth, fpvHeight, intersections, player!.position)
 }
