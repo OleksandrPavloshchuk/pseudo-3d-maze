@@ -27,18 +27,18 @@ export class MazeCell {
         dx: number,
         dy: number
     ): Intersection[] => {
+        let all: Intersection[]
         if (dx === 0) {
-            return this.calculateVerticalEdgesIntersection(src)
+            all = this.calculateVerticalEdgesIntersection(src)
+        } else if (dy === 0) {
+            all = this.calculateHorizontalEdgesIntersection(src)
+        } else {
+            all = []
+            all.push(this.intersectVertical(src, dx, dy, this.x0()))
+            all.push(this.intersectVertical(src, dx, dy, this.x1()))
+            all.push(this.intersectHorizontal(src, dx, dy, this.y0()))
+            all.push(this.intersectHorizontal(src, dx, dy, this.y1()))
         }
-        if (dy === 0) {
-            return this.calculateHorizontalEdgesIntersection(src)
-        }
-        const all: Intersection[] = []
-
-        all.push(this.intersectVertical(src, dx, dy, this.x0()))
-        all.push(this.intersectVertical(src, dx, dy, this.x1()))
-        all.push(this.intersectHorizontal(src, dx, dy, this.y0()))
-        all.push(this.intersectHorizontal(src, dx, dy, this.y1()))
 
         return all.filter(i => this.isOnEdge(i.point) && isOnRay(src, i.point, dx, dy))
     }
